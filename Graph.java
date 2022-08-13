@@ -64,7 +64,14 @@ public class Graph {
   }
 
   public boolean subgraph(Graph g2) {
-
+    if (this.countNodes < g2.countNodes || this.countEdges < g2.countEdges)
+      return false;
+    for (int i = 0; i < g2.adjMatrix.length;i++){
+      for (int j = 0; j < g2.adjMatrix.length;j++){
+        if (g2.adjMatrix[i][j] != 0 && this.adjMatrix[i][j] == 0)
+          return false;
+      }
+    }
     return true;
   }
 
