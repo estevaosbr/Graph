@@ -75,6 +75,23 @@ public class Graph {
     return true;
   }
 
+  public float density(){
+    float d = 0;
+    d = (float) (this.countEdges)/(this.countNodes*(this.countNodes-1));
+    return d;
+  }
+
+  public boolean oriented(){
+    for (int i = 0; i < adjMatrix.length ; i++){
+      for (int j = 0; j< adjMatrix.length ; j++){
+        if (adjMatrix[i][j] != adjMatrix[j][i]){
+          return true;
+        }
+      }
+    }
+    return false;
+  }
+
   @Override
   public String toString() {
     String str = "";

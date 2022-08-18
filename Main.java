@@ -39,6 +39,9 @@ public class Main {
       System.out.println(g1.subgraph(g3));
       System.out.println(g2.subgraph(g3));
       System.out.println(g1.subgraph(g4));
+
+      System.out.println(g1.density());
+      System.out.println(g1.oriented());
       
 
       
