@@ -92,6 +92,10 @@ public class Graph {
     return false;
   }
 
+  public int getCountNodes() {
+    return countNodes;
+  }
+
   @Override
   public String toString() {
     String str = "";
