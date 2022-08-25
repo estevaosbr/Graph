@@ -1,3 +1,5 @@
+import java.util.ArrayList;
+
 public class Graph {
 
   private int countNodes;
@@ -19,6 +21,11 @@ public class Graph {
     }
     this.countEdges++;
     adjMatrix[source][sink] = weight;
+  }
+
+  public void addEdgeUnoriented(int source, int sink, int weight){
+    addEdge(source,sink,weight);
+    addEdge(sink,source,weight);
   }
 
   public int degree(int node) {
@@ -81,10 +88,10 @@ public class Graph {
     return d;
   }
 
-  public boolean oriented(){
-    for (int i = 0; i < adjMatrix.length ; i++){
-      for (int j = 0; j< adjMatrix.length ; j++){
-        if (adjMatrix[i][j] != adjMatrix[j][i]){
+  public boolean oriented() {
+    for (int i = 0; i < adjMatrix.length; i++) {
+      for (int j = 0; j < adjMatrix.length; j++) {
+        if (adjMatrix[i][j] != adjMatrix[j][i]) {
           return true;
         }
       }
@@ -92,9 +99,43 @@ public class Graph {
     return false;
   }
 
-  public int getCountNodes() {
-    return countNodes;
+  public ArrayList buscaEmLargura(Graph graph, int s){
+    int[] descobertos = new int[graph.countNodes];
+    for (int i = 0; i < graph.countNodes; i++){
+      descobertos[i] = 0;
+    }
+
+    descobertos[s] = 1;
+    ArrayList q = new ArrayList();
+    ArrayList r = new ArrayList();
+    q.add(s);
+    r.add(s);
+
+    while (q.isEmpty()!=true){
+      int u = (int)q.remove(0);
+      for (int j = 0 ; j < graph.countNodes ; j++){
+        if (adjMatrix[u][j] == 1){
+          if (descobertos[j] == 0) {
+            q.add(j);
+            r.add(j);
+            descobertos[j] = 1;
+          }
+        }
+      }
+    }
+    System.out.println(r);
+    return r;
   }
+
+    public boolean isConex(Graph graph){
+        ArrayList array = buscaEmLargura(graph,0);
+        if (array.size() == graph.size()){
+            return true;
+        }
+        else{
+            return false;
+        }
+    }
 
   @Override
   public String toString() {
