@@ -1,3 +1,4 @@
+import java.lang.reflect.Array;
 import java.util.ArrayList;
 
 public class Graph {
@@ -99,9 +100,9 @@ public class Graph {
     return false;
   }
 
-  public ArrayList buscaEmLargura(Graph graph, int s){
-    int[] descobertos = new int[graph.countNodes];
-    for (int i = 0; i < graph.countNodes; i++){
+  public ArrayList buscaEmLargura(int s){
+    int[] descobertos = new int[this.countNodes];
+    for (int i = 0; i < this.countNodes; i++){
       descobertos[i] = 0;
     }
 
@@ -113,8 +114,8 @@ public class Graph {
 
     while (q.isEmpty()!=true){
       int u = (int)q.remove(0);
-      for (int j = 0 ; j < graph.countNodes ; j++){
-        if (adjMatrix[u][j] == 1){
+      for (int j = 0 ; j < this.countNodes ; j++){
+        if (this.adjMatrix[u][j] == 1){
           if (descobertos[j] == 0) {
             q.add(j);
             r.add(j);
@@ -123,19 +124,67 @@ public class Graph {
         }
       }
     }
-    System.out.println(r);
     return r;
   }
 
-    public boolean isConex(Graph graph){
-        ArrayList array = buscaEmLargura(graph,0);
-        if (array.size() == graph.size()){
-            return true;
-        }
-        else{
-            return false;
-        }
+  public int notDescAdj(int u, int[] desc){
+    for (int i = 0 ; i < this.adjMatrix[u].length ; i++){
+      if (this.adjMatrix[u][i] != 0 && desc[i] ==0){
+        return i;
+      }
     }
+    return -1;
+  }
+
+  public ArrayList buscaEmProfundidade(int s){
+    int[] descobertos = new int[this.countNodes];
+    for (int i = 0; i < this.countNodes; i++){
+      descobertos[i] = 0;
+    }
+    descobertos[s] = 1;
+    ArrayList<Integer> q = new ArrayList<>();
+    ArrayList r = new ArrayList();
+    q.add(s);
+    r.add(s);
+    while (q.isEmpty()!=true){
+      int u = (int)q.get(q.size()-1);
+      int v = notDescAdj(u,descobertos);
+      if ( v!= -1){
+        q.add(v);
+        r.add(v);
+        descobertos[v] = 1;
+      }
+      else {
+        q.remove(q.size() - 1);
+      }
+    }
+    return r;
+  }
+
+  public ArrayList dfs_rec(int s){
+    int[] descobertos = new int[this.countNodes];
+    for (int i = 0; i < this.countNodes; i++){
+      descobertos[i] = 0;
+    }
+    ArrayList r = new ArrayList();
+    dsf_rec_aux(s,descobertos,r);
+    return r;
+  }
+
+  // TODO: 26/08/2022  
+  public void dsf_rec_aux(int u, int[] desc, ArrayList r){
+    
+  }
+
+  public boolean isConex(){
+    ArrayList array = buscaEmLargura(0);
+    if (array.size() == this.countNodes){
+      return true;
+    }
+    else{
+      return false;
+    }
+  }
 
   @Override
   public String toString() {
