@@ -1,4 +1,7 @@
-import java.lang.reflect.Array;
+import java.io.BufferedReader;
+import java.io.File;
+import java.io.FileReader;
+import java.io.IOException;
 import java.util.ArrayList;
 
 public class Graph {
@@ -167,13 +170,18 @@ public class Graph {
       descobertos[i] = 0;
     }
     ArrayList r = new ArrayList();
-    dsf_rec_aux(s,descobertos,r);
+    dfs_rec_aux(s,descobertos,r);
     return r;
   }
 
-  // TODO: 26/08/2022  
-  public void dsf_rec_aux(int u, int[] desc, ArrayList r){
-    
+  private void dfs_rec_aux(int u, int[] desc, ArrayList r){
+    desc[u] = 1;
+    r.add(u);
+    for (int v = 0; v < this.adjMatrix[u].length; ++v) {
+      if (this.adjMatrix[u][v] != 0 && desc[v] == 0) {
+        dfs_rec_aux(v, desc, r);
+      }
+    }
   }
 
   public boolean isConex(){
@@ -184,6 +192,57 @@ public class Graph {
     else{
       return false;
     }
+  }
+
+  public Graph(String fileName) throws IOException {
+    File file = new File(fileName);
+    FileReader reader = new FileReader(file);
+    BufferedReader bufferedReader = new BufferedReader(reader);
+
+    // Read header
+    String[] line = bufferedReader.readLine().split(" ");
+    this.countNodes = (Integer.parseInt(line[0]));
+    int fileLines = (Integer.parseInt(line[1]));
+    // Create and fill adjMatrix with read edges
+    this.adjMatrix = new int[this.countNodes][this.countNodes];
+    for (int i = 0; i < fileLines; ++i) {
+      String[] edgeInfo = bufferedReader.readLine().split(" ");
+      int source = Integer.parseInt(edgeInfo[0]);
+      int sink = Integer.parseInt(edgeInfo[1]);
+      int weight = Integer.parseInt(edgeInfo[2]);
+      addEdge(source, sink, weight);
+    }
+    bufferedReader.close();
+    reader.close();
+  }
+
+  public ArrayList ord_top(){
+    int[] desc = new int[this.countNodes];
+    for (int i = 0; i < this.countNodes; i++){
+      desc[i] = 0;
+    }
+
+    ArrayList r = new ArrayList();
+
+    for (int i = 0 ; i < this.countNodes ; i++){
+      if (desc[i] == 0) {
+        ord_top_aux(i,desc,r);
+      }
+    }
+    return r;
+  }
+
+  private void ord_top_aux(int u, int[] desc, ArrayList r){
+    desc[u] = 1;
+
+    for (int i = 0 ; i < this.adjMatrix[u].length ; i++){
+      if (this.adjMatrix[u][i] == 1){
+        if (desc[i] == 0){
+          ord_top_aux(i,desc,r);
+        }
+      }
+    }
+    r.add(0,u);
   }
 
   @Override
