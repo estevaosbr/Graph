@@ -29,16 +29,33 @@ public class Main {
 //        System.out.println(g2.buscaEmProfundidade(2));
 //        System.out.println(g2.dfs_rec(2));
 
-        Graph app = new Graph("graphteste.txt");
-        System.out.println(app);
 
-        System.out.println(app.ord_top());
+//        AULA 31/08
+//        Graph app = new Graph("graphteste.txt");
+//        System.out.println(app);
+//        System.out.println(app.ord_top());
+//
+//        Graph graph = new Graph("graph.txt");
+//        System.out.println(graph);
+//        System.out.println(graph.ord_top());
+//        System.out.println(graph.isConex());
+
+//        AULA 02/09
+        Graph graph = new Graph(6);
+        graph.addEdgeUnoriented(0,1,1);
+        graph.addEdgeUnoriented(1,4,1);
+        graph.addEdgeUnoriented(0,4,1);
+        graph.addEdgeUnoriented(3,5,1);
+        System.out.println(graph);
+        int[] desc = graph.connected_comp();
+        for (int i : desc) {
+            System.out.print(desc[i]+" ");
+        }
+
+        Graph a = new Graph("a.txt");
+        System.out.println(a);
+        System.out.println(a.has_cycle_oriented());
 
 
-
-
-
-
-      
     }
 }

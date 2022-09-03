@@ -87,9 +87,7 @@ public class Graph {
   }
 
   public float density(){
-    float d = 0;
-    d = (float) (this.countEdges)/(this.countNodes*(this.countNodes-1));
-    return d;
+    return (float) (this.countEdges)/(this.countNodes*(this.countNodes-1));
   }
 
   public boolean oriented() {
@@ -103,20 +101,20 @@ public class Graph {
     return false;
   }
 
-  public ArrayList buscaEmLargura(int s){
+  public ArrayList<Integer> buscaEmLargura(int s){
     int[] descobertos = new int[this.countNodes];
     for (int i = 0; i < this.countNodes; i++){
       descobertos[i] = 0;
     }
 
     descobertos[s] = 1;
-    ArrayList q = new ArrayList();
-    ArrayList r = new ArrayList();
+    ArrayList<Integer> q = new ArrayList<>();
+    ArrayList<Integer> r = new ArrayList<>();
     q.add(s);
     r.add(s);
 
-    while (q.isEmpty()!=true){
-      int u = (int)q.remove(0);
+    while (!q.isEmpty()){
+      int u = q.remove(0);
       for (int j = 0 ; j < this.countNodes ; j++){
         if (this.adjMatrix[u][j] == 1){
           if (descobertos[j] == 0) {
@@ -139,18 +137,18 @@ public class Graph {
     return -1;
   }
 
-  public ArrayList buscaEmProfundidade(int s){
+  public ArrayList<Integer> buscaEmProfundidade(int s){
     int[] descobertos = new int[this.countNodes];
     for (int i = 0; i < this.countNodes; i++){
       descobertos[i] = 0;
     }
     descobertos[s] = 1;
     ArrayList<Integer> q = new ArrayList<>();
-    ArrayList r = new ArrayList();
+    ArrayList<Integer> r = new ArrayList<>();
     q.add(s);
     r.add(s);
-    while (q.isEmpty()!=true){
-      int u = (int)q.get(q.size()-1);
+    while (!q.isEmpty()){
+      int u = q.get(q.size()-1);
       int v = notDescAdj(u,descobertos);
       if ( v!= -1){
         q.add(v);
@@ -164,17 +162,17 @@ public class Graph {
     return r;
   }
 
-  public ArrayList dfs_rec(int s){
+  public ArrayList<Integer> dfs_rec(int s){
     int[] descobertos = new int[this.countNodes];
     for (int i = 0; i < this.countNodes; i++){
       descobertos[i] = 0;
     }
-    ArrayList r = new ArrayList();
+    ArrayList<Integer> r = new ArrayList<>();
     dfs_rec_aux(s,descobertos,r);
     return r;
   }
 
-  private void dfs_rec_aux(int u, int[] desc, ArrayList r){
+  private void dfs_rec_aux(int u, int[] desc, ArrayList<Integer> r){
     desc[u] = 1;
     r.add(u);
     for (int v = 0; v < this.adjMatrix[u].length; ++v) {
@@ -185,15 +183,9 @@ public class Graph {
   }
 
   public boolean isConex(){
-    ArrayList array = buscaEmLargura(0);
-    if (array.size() == this.countNodes){
-      return true;
-    }
-    else{
-      return false;
-    }
+    ArrayList<Integer> array = buscaEmLargura(0);
+    return array.size() == this.countNodes;
   }
-
   public Graph(String fileName) throws IOException {
     File file = new File(fileName);
     FileReader reader = new FileReader(file);
@@ -216,13 +208,13 @@ public class Graph {
     reader.close();
   }
 
-  public ArrayList ord_top(){
+  public ArrayList<Integer> ord_top(){
     int[] desc = new int[this.countNodes];
     for (int i = 0; i < this.countNodes; i++){
       desc[i] = 0;
     }
 
-    ArrayList r = new ArrayList();
+    ArrayList<Integer> r = new ArrayList<>();
 
     for (int i = 0 ; i < this.countNodes ; i++){
       if (desc[i] == 0) {
@@ -232,7 +224,7 @@ public class Graph {
     return r;
   }
 
-  private void ord_top_aux(int u, int[] desc, ArrayList r){
+  private void ord_top_aux(int u, int[] desc, ArrayList<Integer> r){
     desc[u] = 1;
 
     for (int i = 0 ; i < this.adjMatrix[u].length ; i++){
@@ -245,14 +237,77 @@ public class Graph {
     r.add(0,u);
   }
 
+  public int[] connected_comp(){
+    int[] desc = new int[this.countNodes];
+    for (int i = 0; i < this.countNodes; i++){
+      desc[i] = 0;
+    }
+
+    int comp = 0;
+
+    for (int i = 0 ; i < this.countNodes ; i++){
+      if (desc[i] == 0){
+        comp = comp + 1;
+        connected_comp_aux(i,desc,comp);
+      }
+    }
+    return desc;
+  }
+
+  private void connected_comp_aux(int u, int[] desc, int comp){
+    desc[u] = comp;
+    for (int i = 0; i < this.adjMatrix[u].length ; i++){
+      if (desc[i] == 0 && this.adjMatrix[u][i]!=0){
+        connected_comp_aux(i,desc,comp);
+      }
+    }
+  }
+
+  public boolean has_cycle_oriented(){
+    for (int i = 0; i < this.countNodes; i++) {
+      if (has_cycle_oriented_aux(i))
+        return true;
+    }
+    return false;
+  }
+
+  public boolean has_cycle_oriented_aux(int s){
+    int[] descobertos = new int[this.countNodes];
+    for (int i = 0; i < this.countNodes; i++){
+      descobertos[i] = 0;
+    }
+
+    descobertos[s] = 1;
+    ArrayList<Integer> q = new ArrayList<>();
+    q.add(s);
+
+
+    while (!q.isEmpty()) {
+      int u = q.remove(0);
+      for (int j = 0; j < this.countNodes; j++) {
+        if (this.adjMatrix[u][j] != 0) {
+          if (descobertos[j] == 0) {
+            q.add(j);
+            descobertos[j] = 1;
+          } else {
+            return true;
+          }
+        }
+      }
+    }
+    return false;
+  }
+
+
+
   @Override
   public String toString() {
-    String str = "";
-    for (int i = 0; i < this.adjMatrix.length; i++) {
+    StringBuilder str = new StringBuilder();
+    for (int[] matrix : this.adjMatrix) {
       for (int j = 0; j < this.adjMatrix.length; j++) {
-        str += this.adjMatrix[i][j] + "\t";
+        str.append(matrix[j]).append("\t");
       }
-      str += "\n";
+      str.append("\n");
     }
     return "Graph" + "\n" +
         "countNodes: " + countNodes + "\n" +
