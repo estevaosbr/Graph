@@ -41,20 +41,31 @@ public class Main {
 //        System.out.println(graph.isConex());
 
 //        AULA 02/09
-        Graph graph = new Graph(6);
-        graph.addEdgeUnoriented(0,1,1);
-        graph.addEdgeUnoriented(1,4,1);
-        graph.addEdgeUnoriented(0,4,1);
-        graph.addEdgeUnoriented(3,5,1);
-        System.out.println(graph);
-        int[] desc = graph.connected_comp();
-        for (int i : desc) {
-            System.out.print(desc[i]+" ");
-        }
+//        Graph graph = new Graph(6);
+//        graph.addEdgeUnoriented(0,1,1);
+//        graph.addEdgeUnoriented(1,4,1);
+//        graph.addEdgeUnoriented(0,4,1);
+//        graph.addEdgeUnoriented(3,5,1);
+//        System.out.println(graph);
+//        int[] desc = graph.connected_comp();
+//        for (int i : desc) {
+//            System.out.print(desc[i]+" ");
+//        }
+//
+//        Graph a = new Graph("a.txt");
+//        System.out.println(a);
+//        System.out.println(a.has_cycle_oriented());
 
-        Graph a = new Graph("a.txt");
-        System.out.println(a);
-        System.out.println(a.has_cycle_oriented());
+//        AULA 09/09
+        Graph graph = new Graph(4);
+        graph.addEdgeUnoriented(0,2,2);
+        graph.addEdgeUnoriented(1,2,6);
+        graph.addEdgeUnoriented(1,0,1);
+        graph.addEdgeUnoriented(3,0,4);
+        graph.addEdgeUnoriented(3,1,2);
+
+
+
 
 
     }

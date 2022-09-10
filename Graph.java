@@ -16,6 +16,28 @@ public class Graph {
     this.adjMatrix = new int[numNodes][numNodes];
   }
 
+  public Graph(String fileName) throws IOException {
+    File file = new File(fileName);
+    FileReader reader = new FileReader(file);
+    BufferedReader bufferedReader = new BufferedReader(reader);
+
+    // Read header
+    String[] line = bufferedReader.readLine().split(" ");
+    this.countNodes = (Integer.parseInt(line[0]));
+    int fileLines = (Integer.parseInt(line[1]));
+    // Create and fill adjMatrix with read edges
+    this.adjMatrix = new int[this.countNodes][this.countNodes];
+    for (int i = 0; i < fileLines; ++i) {
+      String[] edgeInfo = bufferedReader.readLine().split(" ");
+      int source = Integer.parseInt(edgeInfo[0]);
+      int sink = Integer.parseInt(edgeInfo[1]);
+      int weight = Integer.parseInt(edgeInfo[2]);
+      addEdge(source, sink, weight);
+    }
+    bufferedReader.close();
+    reader.close();
+  }
+
   public void addEdge(int source, int sink, int weight) {
     if (source < 0 || source > this.adjMatrix.length - 1 ||
         sink < 0 || sink > this.adjMatrix.length - 1 ||
@@ -186,27 +208,6 @@ public class Graph {
     ArrayList<Integer> array = buscaEmLargura(0);
     return array.size() == this.countNodes;
   }
-  public Graph(String fileName) throws IOException {
-    File file = new File(fileName);
-    FileReader reader = new FileReader(file);
-    BufferedReader bufferedReader = new BufferedReader(reader);
-
-    // Read header
-    String[] line = bufferedReader.readLine().split(" ");
-    this.countNodes = (Integer.parseInt(line[0]));
-    int fileLines = (Integer.parseInt(line[1]));
-    // Create and fill adjMatrix with read edges
-    this.adjMatrix = new int[this.countNodes][this.countNodes];
-    for (int i = 0; i < fileLines; ++i) {
-      String[] edgeInfo = bufferedReader.readLine().split(" ");
-      int source = Integer.parseInt(edgeInfo[0]);
-      int sink = Integer.parseInt(edgeInfo[1]);
-      int weight = Integer.parseInt(edgeInfo[2]);
-      addEdge(source, sink, weight);
-    }
-    bufferedReader.close();
-    reader.close();
-  }
 
   public ArrayList<Integer> ord_top(){
     int[] desc = new int[this.countNodes];
@@ -271,7 +272,7 @@ public class Graph {
     return false;
   }
 
-  public boolean has_cycle_oriented_aux(int s){
+  private boolean has_cycle_oriented_aux(int s){
     int[] descobertos = new int[this.countNodes];
     for (int i = 0; i < this.countNodes; i++){
       descobertos[i] = 0;
@@ -298,6 +299,17 @@ public class Graph {
     return false;
   }
 
+  public void dijkstra(int s){
+    int[] dist = new int[this.countNodes];
+    int[] pred = new int[this.countNodes];
+    for (int i = 0; i < this.countNodes; i++) {
+      dist[i] = 1;
+      pred[i] = 0;
+    }
+    dist[s] = 0;
+    ArrayList<Integer> q = new ArrayList<>();
+
+  }
 
 
   @Override
