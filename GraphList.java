@@ -354,8 +354,8 @@ public class GraphList {
         dist[s] = 0;
 
         for (int i = 0; i < this.countNodes; i++) {
-            for (Edge edge : adjList.get(i)) {
-                if(dist[edge.getSink()] > dist[edge.getSource()] + edge.getWeight()){
+            for (Edge edge : edgeList) {
+                if (dist[edge.getSink()] > dist[edge.getSource()] + edge.getWeight()) {
                     dist[edge.getSink()] = dist[edge.getSource()] + edge.getWeight();
                     pred[edge.getSink()] = edge.getSource();
                 }
@@ -376,6 +376,47 @@ public class GraphList {
         long elapsed = System.currentTimeMillis() - start;
         System.out.println("\nTempo de execução: " + elapsed + " ms");
     }
+    void bellmanFordMelhorado(int s, int t) {
+        long start = System.currentTimeMillis();
+        int[] dist = new int[this.countNodes];
+        int[] pred = new int[this.countNodes];
+        boolean trocou;
+
+        for (int i = 0; i < this.countNodes; i++) {
+            dist[i] = INF;
+            pred[i] = -1;
+        }
+        dist[s] = 0;
+
+        for (int i = 0; i < this.countNodes; i++) {
+            trocou = false;
+            for (Edge edge : edgeList) {
+                if (dist[edge.getSink()] > dist[edge.getSource()] + edge.getWeight()) {
+                    dist[edge.getSink()] = dist[edge.getSource()] + edge.getWeight();
+                    pred[edge.getSink()] = edge.getSource();
+                    trocou = true;
+                }
+            }
+            if(!trocou){
+                break;
+            }
+        }
+
+        //Análise do caminho mínimo entre s e t
+        System.out.printf("Distância entre %d e %d: %d   ", s,t,dist[t]);
+        ArrayList<Integer> caminho = new ArrayList<Integer>();
+        int aux = t;
+        caminho.add(t);
+        while(aux != s){
+            aux = pred[aux];
+            caminho.add(0, aux);
+        }
+        System.out.println("Caminho: " + caminho);
+
+        long elapsed = System.currentTimeMillis() - start;
+        System.out.println("\nTempo de execução: " + elapsed + " ms");
+    }
+
 
     public String toString() {
         String str = "";
