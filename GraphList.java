@@ -284,6 +284,15 @@ public class GraphList {
         this.adjList = adjList;
     }
 
+    public Edge existEdge(int source, int sink){
+        for (Edge edge : edgeList) {
+            if (edge.getSource() == source && edge.getSink() == sink){
+                return edge;
+            }
+        }
+        return null;
+    }
+
     public int menorDist(int[] dist, ArrayList<Integer> q){
         int menor = dist[q.get(0)];
         int u = q.get(0);
@@ -409,6 +418,54 @@ public class GraphList {
         caminho.add(t);
         while(aux != s){
             aux = pred[aux];
+            caminho.add(0, aux);
+        }
+        System.out.println("Caminho: " + caminho);
+
+        long elapsed = System.currentTimeMillis() - start;
+        System.out.println("\nTempo de execução: " + elapsed + " ms");
+    }
+
+    public void floydWarshall(int s, int t){
+        long start = System.currentTimeMillis();
+        int[][] dist = new int[this.countNodes][this.countNodes];
+        int[][] pred = new int[this.countNodes][this.countNodes];
+        for (int i = 0; i < this.countNodes; i++) {
+            for (int j = 0; j < this.countNodes; j++) {
+                Edge edge = existEdge(i, j);
+                boolean x = edge != null;
+
+                if(i == j){
+                    dist[i][j] = 0;
+                    pred[i][j] = -1;
+                } else if (x) {
+                    dist[i][j] = edge.getWeight();
+                    pred[i][j] = i;
+                }
+                else{
+                   dist[i][j] = INF;
+                   pred[i][j] = -1;
+                }
+            }
+        }
+
+        for (int k = 0; k < this.countNodes; k++) {
+            for (int i = 0; i < this.countNodes; i++) {
+                for (int j = 0; j < this.countNodes; j++) {
+                    if(dist[i][j] > dist[i][k] + dist[k][j]){
+                        dist[i][j] = dist[i][k] + dist[k][j];
+                        pred[i][j] = pred[k][j];
+                    }
+                }
+            }
+        }
+
+        System.out.printf("Distancia entre %d e %d: %d ", s, t, dist[s][t]);
+        ArrayList<Integer> caminho = new ArrayList<Integer>();
+        caminho.add(t);
+        int aux = t;
+        while (aux != s) {
+            aux = pred[s][aux];
             caminho.add(0, aux);
         }
         System.out.println("Caminho: " + caminho);
