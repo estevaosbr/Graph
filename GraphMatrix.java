@@ -339,6 +339,148 @@ public class GraphMatrix {
     System.out.println("Path: " + C);
   }
 
+  public int menorDist(int[] dist, ArrayList<Integer> q){
+    int menor = dist[q.get(0)];
+    int u = q.get(0);
+
+    for (int i = 0; i < this.countNodes; i++) {
+      if(q.contains(i)){
+        if(dist[i] < menor){
+          menor = dist[i];
+          u = i;
+        }
+      }
+    }
+    return u;
+  }
+
+  public void dijkstra(int s, int t) {
+    long start = System.currentTimeMillis();
+    int[] pred = new int[this.countNodes];
+    int[] dist = new int[this.countNodes];
+
+    for (int i = 0; i < this.countNodes; i++) {
+      pred[i] = -1;
+      dist[i] = INF;
+    }
+
+    dist[s] = 0;
+    ArrayList<Integer> q = new ArrayList<Integer>();
+    for (int i = 0; i < this.countNodes; i++) {
+      q.add(i);
+    }
+
+    while (q.size() != 0) {
+      Integer u = menorDist(dist, q);
+      q.remove(u);
+
+      for (int i = 0; i < this.adjMatrix[u].length; i++) {
+        if (this.adjMatrix[u][i] != 0) {
+          if (dist[i] > dist[u] + this.adjMatrix[u][i]) {
+            dist[i] = dist[u] + this.adjMatrix[u][i];
+            pred[i] = u;
+          }
+        }
+      }
+    }
+
+    //Análise do caminho mínimo entre s e t
+    System.out.printf("Distância entre %d e %d: %d   ", s,t,dist[t]);
+    ArrayList<Integer> caminho = new ArrayList<Integer>();
+    int aux = t;
+    caminho.add(t);
+    while(aux != s){
+      aux = pred[aux];
+      caminho.add(0,aux);
+    }
+    System.out.println("Caminho: " + caminho);
+
+    long elapsed = System.currentTimeMillis() - start;
+    System.out.println("\nTempo de execução: " + elapsed + " ms");
+  }
+
+  public void bellmanFord(int s, int t){
+    long start = System.currentTimeMillis();
+    int[] pred = new int[this.countNodes];
+    int[] dist = new int[this.countNodes];
+
+    for (int i = 0; i < this.countNodes; i++) {
+      dist[i] = INF;
+      pred[i] = -1;
+    }
+    dist[s] = 0;
+
+    for (int i = 0; i < this.countNodes; i++) {
+      for (int j = 0; j < this.countNodes; j++) {
+        if(i!=j && this.adjMatrix[i][j]!=0) {
+          if (dist[j] > dist[i]+this.adjMatrix[i][j]){
+            dist[j] = dist[i] + this.adjMatrix[i][j];
+            pred[j] = i;
+          }
+        }
+      }
+    }
+
+    //Análise do caminho mínimo entre s e t
+    System.out.printf("Distância entre %d e %d: %d   ", s,t,dist[t]);
+    ArrayList<Integer> caminho = new ArrayList<Integer>();
+    int aux = t;
+    caminho.add(t);
+    while(aux != s){
+      aux = pred[aux];
+      caminho.add(0,aux);
+    }
+    System.out.println("Caminho: " + caminho);
+
+    long elapsed = System.currentTimeMillis() - start;
+    System.out.println("\nTempo de execução: " + elapsed + " ms");
+  }
+
+//  public void bellmanFordMelhorado(int s, int t){
+//    long start = System.currentTimeMillis();
+//    int[] pred = new int[this.countNodes];
+//    int[] dist = new int[this.countNodes];
+//    boolean trocou;
+//
+//    for (int i = 0; i < this.countNodes; i++) {
+//      dist[i] = INF;
+//      pred[i] = -1;
+//    }
+//    dist[s] = 0;
+//
+//    for (int k = 0; k < this.countNodes; k++) {
+//      trocou = false;
+//      for (int i = 0; i < this.countNodes; i++) {
+//        for (int j = 0; j < this.countNodes; j++) {
+//          if (i != j && this.adjMatrix[i][j] != 0) {
+//            if (dist[j] > dist[i] + this.adjMatrix[i][j]) {
+//              dist[j] = dist[i] + this.adjMatrix[i][j];
+//              pred[j] = i;
+//              trocou = true;
+//            }
+//          }
+//        }
+//      }
+//      if(!trocou){
+//        break;
+//      }
+//    }
+//
+//
+//    //Análise do caminho mínimo entre s e t
+//    System.out.printf("Distância entre %d e %d: %d   ", s,t,dist[t]);
+//    ArrayList<Integer> caminho = new ArrayList<Integer>();
+//    int aux = t;
+//    caminho.add(t);
+//    while(aux != s){
+//      aux = pred[aux];
+//      caminho.add(0,aux);
+//    }
+//    System.out.println("Caminho: " + caminho);
+//
+//    long elapsed = System.currentTimeMillis() - start;
+//    System.out.println("\nTempo de execução: " + elapsed + " ms");
+//  }
 
   @Override
   public String toString() {
