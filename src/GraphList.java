@@ -1,3 +1,4 @@
+package src;
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileReader;
@@ -98,7 +99,7 @@ public class GraphList {
                 boolean addEdgeUV = true;
                 for (int idx = 0; idx < this.adjList.get(u).size(); ++idx) {
                     int v2 = this.adjList.get(u).get(idx).getSink();
-                    if (v2 == v) { // Edge (u, v) exists and should not be added
+                    if (v2 == v) { // src.Edge (u, v) exists and should not be added
                         addEdgeUV = false;
                         break;
                     }
@@ -125,7 +126,7 @@ public class GraphList {
                 // Check if edge (u,v) exists in this graph
                 for (int idx2 = 0; idx2 < this.adjList.get(u).size(); ++idx2) {
                     int v2 = this.adjList.get(u).get(idx2).getSink();
-                    if (v == v2) { // Edge exists
+                    if (v == v2) { // src.Edge exists
                         foundEdge = true;
                         break;
                     }

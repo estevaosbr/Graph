@@ -1,3 +1,5 @@
+package src;
+
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileReader;
@@ -308,7 +310,7 @@ public class GraphMatrix {
         if (i == j) {
           dist[i][j] = 0;
           pred[i][j] = -1;
-        } else if (this.adjMatrix[i][j] != 0) { // Edge (i, j) exists
+        } else if (this.adjMatrix[i][j] != 0) { // src.Edge (i, j) exists
           dist[i][j] = this.adjMatrix[i][j];
           pred[i][j] = i;
         } else {
