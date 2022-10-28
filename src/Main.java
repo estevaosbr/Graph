@@ -30,7 +30,6 @@ public class Main {
                         System.out.println("Digite o destino: ");
                         destino = scanner.nextInt();
                         new GraphList(fileName).bellmanFordMelhorado(origem,destino);
-                        scanner.close();
                     }
                     break;
                 case 2:
